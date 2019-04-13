@@ -1,8 +1,0 @@
-{
-  "resolution": "main",
-  "tree": {
-    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/a97c65e4af420b0576fa5bb44e2e9797557f1945/three/index.d.ts",
-    "raw": "registry:dt/three#0.83.0+20170208025302",
-    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/a97c65e4af420b0576fa5bb44e2e9797557f1945/three/index.d.ts"
-  }
-}
