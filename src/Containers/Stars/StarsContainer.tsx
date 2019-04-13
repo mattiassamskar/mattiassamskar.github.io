@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { init, animate } from "./index";
+import "./starsContainer.css";
 
 export const StarsContainer: FunctionComponent = () => {
   const [ref, setRef] = useState();
@@ -10,5 +11,5 @@ export const StarsContainer: FunctionComponent = () => {
     animate();
   }, [ref]);
 
-  return <div ref={setRef} style={{ width: "100%", height: 500 }} />;
+  return <div ref={setRef} className="container" />;
 };
