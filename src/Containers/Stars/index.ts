@@ -1,4 +1,4 @@
-import THREE from "three";
+import * as THREE from "three";
 
 export interface Planet {
   image: string;
@@ -11,6 +11,7 @@ export interface Planet {
   mesh: THREE.Mesh | null;
 }
 
+var parentElement: HTMLElement;
 var scene: THREE.Scene;
 var camera: THREE.PerspectiveCamera;
 var renderer: THREE.Renderer;
@@ -105,8 +106,8 @@ var initPlanets = () => {
 };
 
 var setMeshStartPosition = (mesh: THREE.Mesh, z: number) => {
-  var width = window.innerWidth;
-  var height = window.innerHeight;
+  var width = parentElement.offsetWidth;
+  var height = parentElement.offsetHeight;
 
   mesh.position.x = 3 * (Math.random() * width - width / 2);
   mesh.position.y = 3 * (Math.random() * height - height / 2);
@@ -139,13 +140,13 @@ var animatePlanets = () => {
   });
 };
 
-var onWindowResize = () => {
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth / window.innerHeight;
+var onElementResize = () => {
+  renderer.setSize(parentElement.offsetWidth, parentElement.offsetHeight);
+  camera.aspect = parentElement.offsetWidth / parentElement.offsetHeight;
   camera.updateProjectionMatrix();
 };
 
-var onDocumentMouseDown = (event: MouseEvent) => {
+export const onElementMouseDown = (event: MouseEvent) => {
   event.preventDefault();
   mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
   mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
@@ -158,44 +159,42 @@ var onDocumentMouseDown = (event: MouseEvent) => {
   }
 };
 
-var onDocumentTouchStart = (event: any) => {
+export const onElementTouchStart = (event: any) => {
   event.preventDefault();
   event.clientX = event.touches[0].clientX;
   event.clientY = event.touches[0].clientY;
-  onDocumentMouseDown(event);
+  onElementMouseDown(event);
 };
 
-var init = () => {
+export const init = (htmlElement: HTMLElement) => {
+  parentElement = htmlElement;
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
     40,
-    window.innerWidth / window.innerHeight,
+    parentElement.offsetWidth / parentElement.offsetHeight,
     1,
     5000
   );
   camera.position.z = 1000;
   renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(parentElement.offsetWidth, parentElement.offsetHeight);
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
 
-  document.body.appendChild(renderer.domElement);
-  window.addEventListener("resize", onWindowResize, false);
-  document.addEventListener("mousedown", onDocumentMouseDown, false);
-  document.addEventListener("touchstart", onDocumentTouchStart, false);
+  parentElement.appendChild(renderer.domElement);
+  window.addEventListener("resize", onElementResize, false);
+  parentElement.addEventListener("mousedown", onElementMouseDown, false);
+  parentElement.addEventListener("touchstart", onElementTouchStart, false);
 
   initStars();
   initBox();
   initPlanets();
 };
 
-var animate = () => {
+export const animate = () => {
   requestAnimationFrame(animate);
   animateStars();
   animateBox();
   animatePlanets();
   renderer.render(scene, camera);
 };
-
-init();
-animate();
