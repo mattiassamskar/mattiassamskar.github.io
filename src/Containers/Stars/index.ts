@@ -8,7 +8,7 @@ export interface Planet {
   size: number;
   tilt: number;
   angle: number;
-  mesh: THREE.Mesh;
+  mesh: THREE.Mesh | null;
 }
 
 var scene: THREE.Scene;
@@ -19,7 +19,7 @@ var mouse: THREE.Vector2;
 var box: THREE.Mesh;
 var stars: THREE.Mesh[] = [];
 
-var planets: IPlanet[] = [
+var planets: Planet[] = [
   {
     image: "./img/linkedin.png",
     url: "https://se.linkedin.com/in/mattiassamskar",
@@ -129,12 +129,12 @@ var animateBox = () => {
 };
 
 var animatePlanets = () => {
-  planets.forEach((planet: IPlanet) => {
+  planets.forEach((planet: Planet) => {
     var x = planet.distance * Math.cos(planet.angle * planet.tilt);
     var y = (planet.distance * Math.sin(planet.angle * planet.tilt)) / 3;
     var z = planet.distance * Math.sin(planet.angle);
-    planet.mesh.position.set(x, y, z);
-    planet.mesh.rotation.y += planet.speed;
+    planet.mesh!.position.set(x, y, z);
+    planet.mesh!.rotation.y += planet.speed;
     planet.angle += planet.speed;
   });
 };
@@ -151,7 +151,7 @@ var onDocumentMouseDown = (event: MouseEvent) => {
   mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   var intersects = raycaster.intersectObjects(
-    planets.map((planet: Planet) => planet.mesh)
+    planets.map((planet: Planet) => planet.mesh!)
   );
   if (intersects.length > 0) {
     window.open(intersects[0].object.userData as any);
